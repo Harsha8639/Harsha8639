@@ -271,8 +271,15 @@ async def get_my_guardians(current_user: User = Depends(get_current_user)):
 
 # Location Tracking Routes
 @api_router.post("/location")
-async def update_location(location: LocationData, current_user: User = Depends(get_current_user)):
-    location.user_id = current_user.id
+async def update_location(location_update: LocationUpdate, current_user: User = Depends(get_current_user)):
+    location = LocationData(
+        user_id=current_user.id,
+        latitude=location_update.latitude,
+        longitude=location_update.longitude,
+        accuracy=location_update.accuracy,
+        call_active=location_update.call_active,
+        emergency_mode=location_update.emergency_mode
+    )
     
     # Store location in database
     await db.locations.insert_one(location.dict())
