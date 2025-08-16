@@ -345,6 +345,8 @@ async def get_guardian_users(credentials: HTTPAuthorizationCredentials = Depends
         users = await db.users.find({"id": {"$in": guardian["users_guarding"]}}).to_list(100)
         return [User(**user) for user in users]
         
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
     except (jwt.InvalidTokenError, Exception):
         raise HTTPException(status_code=401, detail="Invalid token")
 
