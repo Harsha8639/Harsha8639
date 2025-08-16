@@ -345,7 +345,7 @@ async def get_guardian_users(credentials: HTTPAuthorizationCredentials = Depends
         users = await db.users.find({"id": {"$in": guardian["users_guarding"]}}).to_list(100)
         return [User(**user) for user in users]
         
-    except jwt.JWTError:
+    except (jwt.InvalidTokenError, Exception):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 @api_router.get("/guardian/user-location/{user_id}")
