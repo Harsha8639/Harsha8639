@@ -373,7 +373,7 @@ async def get_user_location(user_id: str, credentials: HTTPAuthorizationCredenti
         
         return {"location": LocationData(**location)}
         
-    except jwt.JWTError:
+    except (jwt.InvalidTokenError, Exception):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 # WebSocket Routes
